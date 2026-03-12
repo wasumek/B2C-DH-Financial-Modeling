@@ -21,13 +21,15 @@ from financial_model import (
     run_elasticity_grid,
     make_param_grid
 )
+from financial_engineering import run_advanced_simulation
 from results_output import (
     print_assumptions_summary,
     print_monte_carlo_summary,
     print_base_case_projection,
     print_tornado_summary,
     print_elasticity_grid,
-    export_results_to_excel
+    export_results_to_excel,
+    print_advanced_simulation_summary
 )
 from visualization import create_all_plots
 
@@ -115,9 +117,21 @@ def main():
     print("✓ Elasticity analysis complete")
     
     # ========================================================================
-    # 5. GENERATE OUTPUTS
+    # 5. ADVANCED FINANCIAL ENGINEERING
     # ========================================================================
-    print("\n[5/5] Generating outputs...")
+    print("\n[5/6] Running advanced financial engineering simulation...")
+    advanced_results = run_advanced_simulation(
+        assumptions=ASSUMPTIONS,
+        years=YEARS,
+        n_paths=5_000,
+        seed=42
+    )
+    print("✓ Advanced simulation complete")
+    
+    # ========================================================================
+    # 6. GENERATE OUTPUTS
+    # ========================================================================
+    print("\n[6/6] Generating outputs...")
     
     # Print results to console
     from financial_model import build_base_case_params
@@ -139,6 +153,9 @@ def main():
         "screening_participation_pct", screen_grid,
         npv_cs, be_cs
     )
+    
+    # Print advanced simulation summary
+    print_advanced_simulation_summary(advanced_results)
     
     # Export to Excel
     export_results_to_excel(
