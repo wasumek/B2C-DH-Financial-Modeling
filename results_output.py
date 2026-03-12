@@ -305,18 +305,31 @@ def print_advanced_simulation_summary(advanced_results: Dict):
     
     # 2. Real Options Scenarios
     print("\n" + "-" * 80)
-    print("REAL OPTIONS PROBABILITIES (Diagnostic Yield Triggers)")
+    print("REAL OPTIONS SCENARIO FREQUENCIES")
     print("-" * 80)
     n_paths = advanced_results["n_paths"]
     scenarios = advanced_results["scenarios"]
-    print(f"Abandon (Yield < 5%):           {scenarios['Abandon'] / n_paths:>15.1%}")
-    print(f"Base Case (5% <= Yield < 7.5%): {scenarios['Base'] / n_paths:>15.1%}")
-    print(f"Expand (Yield >= 7.5%):         {scenarios['Expand'] / n_paths:>15.1%}")
-    
-    # 3. Blended Financing (Tranche B Returns)
+    print(f"Abandon (never recovers Y1 loss): {scenarios['Abandon'] / n_paths:>13.1%}")
+    print(f"Base    (partial recovery):       {scenarios['Base']    / n_paths:>13.1%}")
+    print(f"Expand  (positive from outset):   {scenarios['Expand']  / n_paths:>13.1%}")
+
+    # 3. Investor Return Metrics
     print("\n" + "-" * 80)
-    print("BLENDED FINANCING: TRANCHE B (Institutional Equity)")
+    print("INVESTOR RETURN METRICS (project-level, all paths)")
     print("-" * 80)
-    print(f"Average Levered IRR:            {advanced_results['tranche_b_avg_irr']:>15.2%}")
-    print(f"Average MOIC (Multiple):        {advanced_results['tranche_b_avg_moic']:>15.2f}x")
+    print(f"Average IRR:                    {advanced_results['avg_irr']:>15.2%}")
+    print(f"Average MOIC:                   {advanced_results['avg_moic']:>15.2f}x")
+    print(f"Average Profitability Index:    {advanced_results['avg_pi']:>15.2f}")
+
+    # 4. Discounted Payback Period
+    print("\n" + "-" * 80)
+    print("DISCOUNTED PAYBACK PERIOD (DPP)")
+    print("-" * 80)
+    dpp_prob = advanced_results['dpp_prob']
+    avg_dpp  = advanced_results['avg_dpp']
+    print(f"Prob(Discounted Breakeven):     {dpp_prob:>15.1%}")
+    if np.isfinite(avg_dpp):
+        print(f"Mean DPP (paths that break even): {avg_dpp:>13.1f} years")
+    else:
+        print(f"Mean DPP:                       {'No paths break even':>15}")
 
