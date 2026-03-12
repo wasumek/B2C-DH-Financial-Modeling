@@ -288,3 +288,35 @@ def export_results_to_excel(
         tornado_df.to_excel(writer, sheet_name="Sensitivity", index=False)
     
     print(f"\nResults exported to: {filename}")
+
+
+def print_advanced_simulation_summary(advanced_results: Dict):
+    """Print advanced financial engineering simulation summary."""
+    print("\n" + "=" * 80)
+    print("ADVANCED FINANCIAL ENGINEERING SUMMARY")
+    print("=" * 80)
+    
+    # 1. Risk Metrics
+    print("\n" + "-" * 80)
+    print("RISK METRICS (VaR & CVaR)")
+    print("-" * 80)
+    print(f"95% Value at Risk (VaR):        {advanced_results['var_95']:>15,.0f} CHF")
+    print(f"95% Conditional VaR (CVaR):     {advanced_results['cvar_95']:>15,.0f} CHF")
+    
+    # 2. Real Options Scenarios
+    print("\n" + "-" * 80)
+    print("REAL OPTIONS PROBABILITIES (Diagnostic Yield Triggers)")
+    print("-" * 80)
+    n_paths = advanced_results["n_paths"]
+    scenarios = advanced_results["scenarios"]
+    print(f"Abandon (Yield < 5%):           {scenarios['Abandon'] / n_paths:>15.1%}")
+    print(f"Base Case (5% <= Yield < 7.5%): {scenarios['Base'] / n_paths:>15.1%}")
+    print(f"Expand (Yield >= 7.5%):         {scenarios['Expand'] / n_paths:>15.1%}")
+    
+    # 3. Blended Financing (Tranche B Returns)
+    print("\n" + "-" * 80)
+    print("BLENDED FINANCING: TRANCHE B (Institutional Equity)")
+    print("-" * 80)
+    print(f"Average Levered IRR:            {advanced_results['tranche_b_avg_irr']:>15.2%}")
+    print(f"Average MOIC (Multiple):        {advanced_results['tranche_b_avg_moic']:>15.2f}x")
+
